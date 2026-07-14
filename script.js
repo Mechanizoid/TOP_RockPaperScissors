@@ -7,6 +7,9 @@ const Choice = Object.freeze({
   SCISSORS: 2
 });
 
+// Scores
+let computerScore = 0;
+let humanScore = 0;
 
 function getComputerChoice() {
   let choice = "";
@@ -28,7 +31,6 @@ function getComputerChoice() {
 
   return choice;
 }
-
 
 function getHumanChoice() {
   let choice = "";
