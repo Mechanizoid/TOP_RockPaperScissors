@@ -28,3 +28,29 @@ function getComputerChoice() {
 
   return choice;
 }
+
+
+function getHumanChoice() {
+  let choice = "";
+  let validChoice = false;
+  let promptStr = "One, two, three... shoot!";
+
+  while(!validChoice) {
+    const userInput = prompt(promptStr);
+
+    if (userInput) {
+      choice = userInput.toLowerCase();
+    } else {
+      promptStr = "Oh, you don't feel like playing? Too bad!";
+      continue;
+    }
+
+    if (choice === 'rock' || choice === 'paper' || choice === 'scissors') {
+      validChoice = true;
+    } else {
+      promptStr = "That's not a valid play, you silly goose!";
+    }
+  }
+
+  return choice;
+}
