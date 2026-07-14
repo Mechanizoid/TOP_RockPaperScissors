@@ -7,6 +7,12 @@ const Choice = Object.freeze({
   SCISSORS: 2
 });
 
+const Outcome = Object.freeze({
+  LOSE: 0,
+  WIN:  1,
+  TIE:  2
+});
+
 // Scores
 let computerScore = 0;
 let humanScore = 0;
@@ -56,3 +62,68 @@ function getHumanChoice() {
 
   return choice;
 }
+
+function playRound(humanChoice, computerChoice) {
+  let outcome = null;
+
+  if (computerChoice === 'rock') {
+
+    switch (humanChoice) {
+    case 'rock':
+      outcome = Outcome.TIE;
+      break;
+    case 'paper':
+      outcome = Outcome.WIN;
+      break;
+    case 'scissors':
+      outcome = Outcome.LOSE;
+      break;
+    }
+  } else if (computerChoice === 'paper') {
+    switch(humanChoice) {
+    case 'rock':
+      outcome = Outcome.LOSE;
+      break;
+    case 'paper':
+      outcome = Outcome.TIE;
+      break;
+    case 'scissors':
+      outcome = Outcome.WIN;
+      break;
+    }
+  } else if (computerChoice === 'scissors') {
+    switch (humanChoice) {
+    case 'rock':
+      outcome = Outcome.WIN;
+      break;
+    case 'paper':
+      outcome = Outcome.LOSE;
+      break;
+    case 'scissors':
+      outcome = Outcome.TIE;
+      break;
+    }
+  }
+
+  switch (outcome) {
+  case Outcome.WIN:
+    console.log(`You win! ${humanChoice} beats ${computerChoice}`);
+    humanScore++;
+    break;
+  case Outcome.LOSE:
+    console.log(`You lose! ${computerChoice} beats ${humanChoice}`);
+    computerScore++;
+    break;
+  case Outcome.TIE:
+    console.log(`Uh oh, we both chose ${computerChoice}. This round is a tie!`);
+    break;
+  }
+}
+
+
+// actual gameplay (not in a loop yet)
+
+const humanSelection = getHumanChoice();
+const computerSelection = getComputerChoice();
+
+playRound(humanSelection, computerSelection);
