@@ -13,9 +13,6 @@ const Outcome = Object.freeze({
   TIE:  2
 });
 
-// Scores
-let computerScore = 0;
-let humanScore = 0;
 
 function getComputerChoice() {
   let choice = "";
@@ -63,67 +60,80 @@ function getHumanChoice() {
   return choice;
 }
 
-function playRound(humanChoice, computerChoice) {
-  let outcome = null;
+function playGame(numRounds) {
+  // scores
+  let computerScore = 0;
+  let humanScore = 0;
 
-  if (computerChoice === 'rock') {
+  function playRound(humanChoice, computerChoice) {
+    let outcome = null;
 
-    switch (humanChoice) {
-    case 'rock':
-      outcome = Outcome.TIE;
-      break;
-    case 'paper':
-      outcome = Outcome.WIN;
-      break;
-    case 'scissors':
-      outcome = Outcome.LOSE;
-      break;
+    if (computerChoice === 'rock') {
+
+      switch (humanChoice) {
+      case 'rock':
+        outcome = Outcome.TIE;
+        break;
+      case 'paper':
+        outcome = Outcome.WIN;
+        break;
+      case 'scissors':
+        outcome = Outcome.LOSE;
+        break;
+      }
+    } else if (computerChoice === 'paper') {
+      switch(humanChoice) {
+      case 'rock':
+        outcome = Outcome.LOSE;
+        break;
+      case 'paper':
+        outcome = Outcome.TIE;
+        break;
+      case 'scissors':
+        outcome = Outcome.WIN;
+        break;
+      }
+    } else if (computerChoice === 'scissors') {
+      switch (humanChoice) {
+      case 'rock':
+        outcome = Outcome.WIN;
+        break;
+      case 'paper':
+        outcome = Outcome.LOSE;
+        break;
+      case 'scissors':
+        outcome = Outcome.TIE;
+        break;
+      }
     }
-  } else if (computerChoice === 'paper') {
-    switch(humanChoice) {
-    case 'rock':
-      outcome = Outcome.LOSE;
+
+    switch (outcome) {
+    case Outcome.WIN:
+      console.log(`You win! ${humanChoice} beats ${computerChoice}`);
+      humanScore++;
       break;
-    case 'paper':
-      outcome = Outcome.TIE;
+    case Outcome.LOSE:
+      console.log(`You lose! ${computerChoice} beats ${humanChoice}`);
+      computerScore++;
       break;
-    case 'scissors':
-      outcome = Outcome.WIN;
-      break;
-    }
-  } else if (computerChoice === 'scissors') {
-    switch (humanChoice) {
-    case 'rock':
-      outcome = Outcome.WIN;
-      break;
-    case 'paper':
-      outcome = Outcome.LOSE;
-      break;
-    case 'scissors':
-      outcome = Outcome.TIE;
+    case Outcome.TIE:
+      console.log(`Uh oh, we both chose ${computerChoice}. This round is a tie!`);
       break;
     }
   }
 
-  switch (outcome) {
-  case Outcome.WIN:
-    console.log(`You win! ${humanChoice} beats ${computerChoice}`);
-    humanScore++;
-    break;
-  case Outcome.LOSE:
-    console.log(`You lose! ${computerChoice} beats ${humanChoice}`);
-    computerScore++;
-    break;
-  case Outcome.TIE:
-    console.log(`Uh oh, we both chose ${computerChoice}. This round is a tie!`);
-    break;
+  for (let i = 0; i < numRounds; i++) {
+    playRound( getHumanChoice(), getComputerChoice() );
   }
+
+  // print outcome
+  console.log(`After playing ${numRounds} rounds, here's the score:`);
+  console.log(`Computer: ${computerScore}`);
+  console.log(`Human: ${humanScore}`);
 }
 
 
-// actual gameplay (not in a loop yet)
+// let's play the game
 
-const humanSelection = getHumanChoice();
-const computerSelection = getComputerChoice();
-
-playRound(humanSelection, computerSelection);
+console.log("Let's play Rock Paper Scissors!");
+playGame(5);
