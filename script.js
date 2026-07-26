@@ -18,6 +18,8 @@ const Outcome = Object.freeze({
 let humanScore = 0;
 let computerScore = 0;
 
+let gameRunning = true;
+
 
 function getComputerChoice() {
   let choice = "";
@@ -44,7 +46,6 @@ function playRound(humanChoice, computerChoice) {
   let outcome = null;
 
   if (computerChoice === 'rock') {
-
     switch (humanChoice) {
     case 'rock':
       outcome = Outcome.TIE;
@@ -111,18 +112,21 @@ const messageArea = document.querySelector('#messageArea');
 const humanDisplayedScore = document.querySelector('#humanScore');
 const computerDisplayedScore = document.querySelector('#computerScore');
 
-
 controls.addEventListener('click', (e) => {
   e.stopPropagation();
-  playRound(e.target.id, getComputerChoice());
 
-  humanDisplayedScore.textContent = `Human score: ${humanScore}`;
-  computerDisplayedScore.textContent = `Computer score: ${computerScore}`;
+  if (gameRunning) {
+    playRound(e.target.id, getComputerChoice());
+
+    humanDisplayedScore.textContent = `Human score: ${humanScore}`;
+    computerDisplayedScore.textContent = `Computer score: ${computerScore}`;
+  }
 
   if (humanScore === 5) {
     updateMessageArea('You win this game!');
+    gameRunning = false;
   } else if (computerScore === 5) {
     updateMessageArea('Computer wins this game!');
+    gameRunning = false;
   }
 });
-
