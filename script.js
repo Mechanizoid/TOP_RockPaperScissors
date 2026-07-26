@@ -14,6 +14,11 @@ const Outcome = Object.freeze({
 });
 
 
+// score variables
+let humanScore = 0;
+let computerScore = 0;
+
+
 function getComputerChoice() {
   let choice = "";
 
@@ -35,105 +40,89 @@ function getComputerChoice() {
   return choice;
 }
 
-function getHumanChoice() {
-  let choice = "";
-  let validChoice = false;
-  let promptStr = "One, two, three... shoot!";
+function playRound(humanChoice, computerChoice) {
+  let outcome = null;
 
-  while(!validChoice) {
-    const userInput = prompt(promptStr);
+  if (computerChoice === 'rock') {
 
-    if (userInput) {
-      choice = userInput.toLowerCase();
-    } else {
-      promptStr = "Oh, you don't feel like playing? Too bad!";
-      continue;
+    switch (humanChoice) {
+    case 'rock':
+      outcome = Outcome.TIE;
+      break;
+    case 'paper':
+      outcome = Outcome.WIN;
+      break;
+    case 'scissors':
+      outcome = Outcome.LOSE;
+      break;
     }
-
-    if (choice === 'rock' || choice === 'paper' || choice === 'scissors') {
-      validChoice = true;
-    } else {
-      promptStr = "That's not a valid play, you silly goose!";
+  } else if (computerChoice === 'paper') {
+    switch(humanChoice) {
+    case 'rock':
+      outcome = Outcome.LOSE;
+      break;
+    case 'paper':
+      outcome = Outcome.TIE;
+      break;
+    case 'scissors':
+      outcome = Outcome.WIN;
+      break;
+    }
+  } else if (computerChoice === 'scissors') {
+    switch (humanChoice) {
+    case 'rock':
+      outcome = Outcome.WIN;
+      break;
+    case 'paper':
+      outcome = Outcome.LOSE;
+      break;
+    case 'scissors':
+      outcome = Outcome.TIE;
+      break;
     }
   }
 
-  return choice;
+  switch (outcome) {
+  case Outcome.WIN:
+    updateMessageArea(`You win! ${humanChoice} beats ${computerChoice}`);
+    humanScore++;
+    break;
+  case Outcome.LOSE:
+    updateMessageArea(`You lose! ${computerChoice} beats ${humanChoice}`);
+    computerScore++;
+    break;
+  case Outcome.TIE:
+    updateMessageArea(`Uh oh, we both chose ${computerChoice}. This round is a tie!`);
+    break;
+  }
 }
 
-function playGame(numRounds) {
-  // scores
-  let computerScore = 0;
-  let humanScore = 0;
-
-  function playRound(humanChoice, computerChoice) {
-    let outcome = null;
-
-    if (computerChoice === 'rock') {
-
-      switch (humanChoice) {
-      case 'rock':
-        outcome = Outcome.TIE;
-        break;
-      case 'paper':
-        outcome = Outcome.WIN;
-        break;
-      case 'scissors':
-        outcome = Outcome.LOSE;
-        break;
-      }
-    } else if (computerChoice === 'paper') {
-      switch(humanChoice) {
-      case 'rock':
-        outcome = Outcome.LOSE;
-        break;
-      case 'paper':
-        outcome = Outcome.TIE;
-        break;
-      case 'scissors':
-        outcome = Outcome.WIN;
-        break;
-      }
-    } else if (computerChoice === 'scissors') {
-      switch (humanChoice) {
-      case 'rock':
-        outcome = Outcome.WIN;
-        break;
-      case 'paper':
-        outcome = Outcome.LOSE;
-        break;
-      case 'scissors':
-        outcome = Outcome.TIE;
-        break;
-      }
-    }
-
-    switch (outcome) {
-    case Outcome.WIN:
-      console.log(`You win! ${humanChoice} beats ${computerChoice}`);
-      humanScore++;
-      break;
-    case Outcome.LOSE:
-      console.log(`You lose! ${computerChoice} beats ${humanChoice}`);
-      computerScore++;
-      break;
-    case Outcome.TIE:
-      console.log(`Uh oh, we both chose ${computerChoice}. This round is a tie!`);
-      break;
-    }
-  }
-
-  for (let i = 0; i < numRounds; i++) {
-    playRound( getHumanChoice(), getComputerChoice() );
-  }
-
-  // print outcome
-  console.log(`After playing ${numRounds} rounds, here's the score:`);
-  console.log(`Computer: ${computerScore}`);
-  console.log(`Human: ${humanScore}`);
+function updateMessageArea(message) {
+  messageArea.textContent = message;
 }
 
 
 // let's play the game
 
 console.log("Let's play Rock Paper Scissors!");
-playGame(5);
+
+const controls = document.querySelector('#controls');
+const messageArea = document.querySelector('#messageArea');
+const humanDisplayedScore = document.querySelector('#humanScore');
+const computerDisplayedScore = document.querySelector('#computerScore');
+
+
+controls.addEventListener('click', (e) => {
+  e.stopPropagation();
+  playRound(e.target.id, getComputerChoice());
+
+  humanDisplayedScore.textContent = `Human score: ${humanScore}`;
+  computerDisplayedScore.textContent = `Computer score: ${computerScore}`;
+
+  if (humanScore === 5) {
+    updateMessageArea('You win this game!');
+  } else if (computerScore === 5) {
+    updateMessageArea('Computer wins this game!');
+  }
+});
+
